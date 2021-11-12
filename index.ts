@@ -2,7 +2,7 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
-const Performer = require('./models/performer.ts');
+const Recipe = require('./models/recipe.ts');
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
 require('dotenv').config();
 const app = express();
@@ -18,7 +18,7 @@ app.use(
   graphqlHTTP({
     schema: buildSchema(`
 
-    type Performer {
+    type Recipe {
       _id: ID!
       name: String!
       group: String!
@@ -29,7 +29,7 @@ app.use(
       link: String!
     }
 
-    input PerformerInput {
+    input RecipeInput {
       name: String!
       group: String!
       specialty: String!
@@ -40,12 +40,12 @@ app.use(
     }
 
     type Query {
-      performers: [Performer!]!
-      performersCustom(gender:[String], group:[String], limit:Int):[Performer!]!
+      recipes: [Recipe!]!
+      recipesCustom(gender:[String], group:[String], limit:Int):[Recipe!]!
     }
 
     type RootMutation {
-      createPerformer(performerInput: PerformerInput): Performer
+      createRecipe(recipeInput: RecipeInput): Recipe
     }
 
     schema {
@@ -54,43 +54,43 @@ app.use(
     }
   `),
     rootValue: {
-      performers: () => {
-        return Performer.find()
-          .then(performers => {
-            console.log(performers);
-            return performers.map(performer => {
-              return { ...performer._doc };
+      recipes: () => {
+        return Recipe.find()
+          .then(recipes => {
+            console.log(recipes);
+            return recipes.map(recipe => {
+              return { ...recipe._doc };
             });
           })
           .catch(error => {
             throw error;
           });
       },
-      performersCustom: args => {
+      recipesCustom: args => {
         let newArgs = { ...args };
         delete args.limit;
-        return Performer.find(args)
-          .then(performers => {
-            let results = _.sampleSize(performers, newArgs.limit);
-            return results.map(performer => {
-              return { ...performer._doc };
+        return Recipe.find(args)
+          .then(recipes => {
+            let results = _.sampleSize(recipes, newArgs.limit);
+            return results.map(recipe => {
+              return { ...recipe._doc };
             });
           })
           .catch(error => {
             throw error;
           });
       },
-      createPerformer: args => {
-        const performer = new Performer({
-          name: args.performerInput.name,
-          group: args.performerInput.group,
-          specialty: args.performerInput.specialty,
-          photo: args.performerInput.photo,
-          gender: args.performerInput.gender,
-          bio: args.performerInput.bio,
-          link: args.performerInput.link,
+      createRecipe: args => {
+        const recipe = new Recipe({
+          name: args.recipeInput.name,
+          group: args.recipeInput.group,
+          specialty: args.recipeInput.specialty,
+          photo: args.recipeInput.photo,
+          gender: args.recipeInput.gender,
+          bio: args.recipeInput.bio,
+          link: args.recipeInput.link,
         });
-        return performer
+        return recipe
           .save()
           .then(results => {
             console.log('Saved to mongo!', results);
