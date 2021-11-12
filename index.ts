@@ -2,7 +2,7 @@ const express = require('express');
 const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 const mongoose = require('mongoose');
-const Performer = require('./models/performer');
+const Performer = require('./models/performer.ts');
 const options = { useNewUrlParser: true, useUnifiedTopology: true };
 require('dotenv').config();
 const app = express();
@@ -22,7 +22,7 @@ app.use(
       _id: ID!
       name: String!
       group: String!
-      specialty: [String!]!
+      specialty: String!
       photo: String!
       gender: String!
       bio: String!
@@ -32,7 +32,7 @@ app.use(
     input PerformerInput {
       name: String!
       group: String!
-      specialty: [String!]!
+      specialty: String!
       photo: String!
       gender: String!
       bio: String!

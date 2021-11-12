@@ -1,22 +1,25 @@
 const mongoose = require('mongoose');
-import { possibleNames } from '../constants/possibleNames'
-
 const Schema = mongoose.Schema;
 
-const perfomerSchema = new Schema({
+const possibleNames = {
+  blueberry: 'blueberry',
+  strawberry: ['strawberry', 'strawberries'],
+};
+
+const performerSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   group: {
     type: String,
-    required: true
-  },
-  specialty: [{
-    type: String,
-    enum: possibleNames,
     required: true,
-  }],
+  },
+  specialty: {
+    type: String,
+    enum: ['blueberry', 'strawberry'],
+    required: true,
+  },
   photo: { type: String, required: true },
   gender: {
     type: String,
@@ -25,12 +28,12 @@ const perfomerSchema = new Schema({
   },
   bio: {
     type: String,
-    required: true
+    required: true,
   },
   link: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
-module.exports = mongoose.model('Performer', perfomerSchema);
+module.exports = mongoose.model('Performer', performerSchema);
