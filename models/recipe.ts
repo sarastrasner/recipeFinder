@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const possibleNames = {
   blueberry: 'blueberry',
-  strawberry: ['strawberry', 'strawberries'],
+  strawberry: 'strawberry',
 };
 
-const performerSchema = new Schema({
+const recipeSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -17,7 +17,7 @@ const performerSchema = new Schema({
   },
   specialty: {
     type: String,
-    enum: ['blueberry', 'strawberry'],
+    enum: possibleNames,
     required: true,
   },
   photo: { type: String, required: true },
@@ -36,4 +36,4 @@ const performerSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('Performer', performerSchema);
+module.exports = mongoose.model('Recipe', recipeSchema);
